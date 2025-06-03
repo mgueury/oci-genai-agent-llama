@@ -38,6 +38,10 @@ else
   exit 
 fi
 
+if [ -f src/before_destroy.sh ]; then
+  src/before_destroy.sh
+fi
+
 # Confidential APP
 disableConfidentialApp() {
   # Disable the app before destroy... (Bug?) if not destroy fails...
