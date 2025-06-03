@@ -1,7 +1,7 @@
 // -- Vault -----------------------------------------------------------------
 
 resource "oci_kms_vault" "starter_kms_vault" {
-  compartment_id = local.lz_database_cmp_ocid
+  compartment_id = local.lz_db_cmp_ocid
   display_name ="${var.prefix}-vault"
   vault_type   = "DEFAULT"
 }
@@ -17,7 +17,7 @@ resource "oci_kms_key" "starter_kms_key" {
   depends_on = [ time_sleep.vault_session_wait ]
 
   #Required
-  compartment_id      = local.lz_database_cmp_ocid
+  compartment_id      = local.lz_db_cmp_ocid
   display_name        = "${var.prefix}-key"
   management_endpoint = oci_kms_vault.starter_kms_vault.management_endpoint
   protection_mode     = "SOFTWARE"
@@ -33,7 +33,7 @@ resource "oci_kms_key" "starter_kms_key" {
 
 resource "oci_vault_secret" "starter_secret_atp" {
   #Required
-  compartment_id = local.lz_database_cmp_ocid
+  compartment_id = local.lz_db_cmp_ocid
   secret_content {
     #Required
     content_type = "BASE64"
@@ -63,19 +63,19 @@ data "oci_database_tools_database_tools_endpoint_service" "starter_database_tool
 
 resource "oci_database_tools_database_tools_private_endpoint" "starter_database_tools_private_endpoint" {
   #Required
-  compartment_id      = local.lz_database_cmp_ocid
+  compartment_id      = local.lz_db_cmp_ocid
   display_name        = "${var.prefix}-dbtools-private-endpoint"
   endpoint_service_id = data.oci_database_tools_database_tools_endpoint_service.starter_database_tools_endpoint_service.id
-  subnet_id           = oci_core_subnet.starter_private_subnet.id
+  subnet_id           = oci_core_subnet.starter_db_subnet.id
 
   #Optional
   description         = "Private Endpoint to ATP"
 }
 
 data "oci_database_tools_database_tools_private_endpoints" "starter_database_tools_private_endpoints" {
-  compartment_id  = local.lz_database_cmp_ocid
+  compartment_id  = local.lz_db_cmp_ocid
   state           = "ACTIVE"
-  subnet_id       = oci_core_subnet.starter_private_subnet.id
+  subnet_id       = oci_core_subnet.starter_db_subnet.id
   display_name    = oci_database_tools_database_tools_private_endpoint.starter_database_tools_private_endpoint.display_name
 }
 
@@ -95,7 +95,7 @@ output "private_endpoint_d" {
 
 # Connection - Resource
 resource "oci_database_tools_database_tools_connection" "starter_dbtools_connection" {
-  compartment_id    = local.lz_database_cmp_ocid
+  compartment_id    = local.lz_db_cmp_ocid
   display_name      = "${var.prefix}-dbtools-connection"
   type              = "ORACLE_DATABASE"
   connection_string = local.db_url
@@ -123,7 +123,7 @@ output "connection_r" {
 
 # Connection - Data Sources
 data "oci_database_tools_database_tools_connections" "starter_database_tools_connections" {
-  compartment_id = local.lz_database_cmp_ocid
+  compartment_id = local.lz_db_cmp_ocid
   display_name   = oci_database_tools_database_tools_connection.starter_dbtools_connection.display_name
   state          = "ACTIVE"
 }

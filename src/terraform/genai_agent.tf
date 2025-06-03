@@ -1,3 +1,5 @@
+variable "namespace" {}
+
 resource "oci_objectstorage_bucket" "starter_agent_bucket" {
   compartment_id = local.lz_serv_cmp_ocid
   namespace      = var.namespace
