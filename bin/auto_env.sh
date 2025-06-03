@@ -152,11 +152,12 @@ else
 
   # DATE_POSTFIX (used for logs names)
   DATE_POSTFIX=`date '+%Y%m%d-%H%M%S'`
+  
+  export TF_VAR_namespace=`oci os ns get | jq -r .data`
+  auto_echo TF_VAR_namespace=$TF_VAR_namespace
 
   # Kubernetes and OCIR
   if [ "$TF_VAR_deploy_type" == "kubernetes" ] || [ "$TF_VAR_deploy_type" == "function" ] || [ "$TF_VAR_deploy_type" == "container_instance" ] || [ -f $PROJECT_DIR/src/terraform/oke.tf ]; then
-    export TF_VAR_namespace=`oci os ns get | jq -r .data`
-    auto_echo TF_VAR_namespace=$TF_VAR_namespace
     export TF_VAR_email=mail@domain.com
     auto_echo TF_VAR_email=$TF_VAR_email
     # ex: OCIR region is using the key prefix: fra.ocir.io
