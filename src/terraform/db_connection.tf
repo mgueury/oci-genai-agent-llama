@@ -40,6 +40,7 @@ locals {
 }
 
 // -- Secret ----------------------------------------------------------------
+// Name with random_string.id is needed since a secret goes to "Pending deletion"
 
 resource "oci_vault_secret" "starter_secret_atp" {
   #Required
@@ -54,7 +55,7 @@ resource "oci_vault_secret" "starter_secret_atp" {
     stage   = "CURRENT"
   }
   key_id      = local.vault_key_ocid
-  secret_name = "atp-password"
+  secret_name = "atp-password-${random_string.id.result}"
   vault_id    = local.vault_ocid
 }
 
