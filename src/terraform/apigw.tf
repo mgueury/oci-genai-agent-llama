@@ -47,7 +47,7 @@ resource "oci_apigateway_deployment" "starter_apigw_deployment_ords" {
 resource "oci_apigateway_deployment" "starter_apigw_deployment_i" {
   compartment_id = local.lz_app_cmp_ocid
   display_name   = "${var.prefix}-apigw-deployment"
-  gateway_id     = local.apigw_ocid
+  gateway_id     = oci_apigateway_gateway.starter_apigw.id
   path_prefix    = "/i"
   specification {
     # Go directly from APIGW to APEX in the DB    
