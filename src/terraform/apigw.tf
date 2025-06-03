@@ -6,7 +6,7 @@ resource oci_apigateway_gateway starter_apigw {
   freeform_tags = local.freeform_tags       
 }
 
-locals {
+locals {  
   db_root_url = replace(data.oci_database_autonomous_database.starter_atp.connection_urls[0].apex_url, "/ords/apex", "" )
 }   
 
@@ -15,7 +15,7 @@ locals {
 resource "oci_apigateway_deployment" "starter_apigw_deployment_ords" {
   compartment_id = local.lz_app_cmp_ocid
   display_name   = "${var.prefix}-apigw-deployment"
-  gateway_id     = local.apigw_ocid
+  gateway_id     = oci_apigateway_gateway.starter_apigw.id
   path_prefix    = "/ords"
   specification {
     # Go directly from APIGW to APEX in the DB    
