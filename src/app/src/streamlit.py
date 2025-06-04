@@ -170,30 +170,38 @@ else:
                                 st.text_area(translations[lang_code]["citation_text"], value=citation.source_text, height=200) # Use st.text_area for better formatting
             else:
                 print( str(execute_session_response.data), flush=True )
-                function_call=execute_session_response.data.required_actions[0].function_call 
-                tool_name = function_call.name
-                print( 'Tool: ' + tool_name, flush=True )
-                string_arguments = function_call.arguments
-                dict_arguments = json.loads(string_arguments)
-                print( str(dict_arguments), flush=True )
-        
-                if tool_name == 'add':
-                    try: 
-                        number1 = dict_arguments.get("number1")
-                        number2 = dict_arguments.get("number2")
-                        result = int(number1) + int(number2)
-                        message = f'ADD: {result}'
-                    except:
-                        message = f"Error call tool {tool_name} - {string_arguments}"
-                else:
-                    message = f'Tool {tool_name} is not implemented'
-                    
+
+                performed_actions = []
+                for action in execute_session_response.data.required_actions or []:
+                    if action.required_action_type == "FUNCTION_CALLING_REQUIRED_ACTION":
+                        fn = action.function_call
+                        args = json.loads(fn.arguments)
+                        if fn.name == "add":
+                            number1 = args.get("number1")
+                            number2 = args.get("number2")
+                            result = int(number1) + int(number2)
+                            message = f"ADD: {result}"                            
+                        else:
+                            message = f'Tool {fn} is not implemented'
+                        performed_actions.append({
+                            "actionId": action.action_id,
+                            "performedActionType": "FUNCTION_CALLING_PERFORMED_ACTION",
+                            "functionCallOutput": message
+                        })
+                chat_details = oci.generative_ai_agent_runtime.models.ChatDetails(
+                    user_message="",
+                    should_stream=False,
+                    session_id=st.session_state.session_id,
+                    performed_actions=performed_actions
+                )
+                execute_session_response = genai_agent_runtime_client.chat(agent_endpoint_id, chat_details)
+                  
                 with st.chat_message("assistant"):
                         st.session_state.messages.append({"role": "assistant", "content": message })
                         st.markdown(message)                        
                   
                 with st.expander("Tool"):    
-                    st.write(f"Tool: {function_call.name}")   
-                    st.write(f"Arguments: {function_call.arguments}")   
+                    st.write(f"Tool: {fn.name}")   
+                    st.write(f"Arguments: {fn.arguments}")   
         else:
             st.error(f"API request failed with status: {execute_session_response.status}")
