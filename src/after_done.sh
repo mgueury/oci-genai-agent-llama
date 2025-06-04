@@ -11,14 +11,16 @@ get_id_from_tfstate "AGENT_KB_OCID" "starter_agent_kb"
 get_id_from_tfstate "DBTOOLS_OCID" "starter_dbtools_connection" 
 
 # Upload Sample Files
-sleep 5
+echo "-- Upload Sample Files in Bucket --------------------------------------"
 oci os object bulk-upload -ns $TF_VAR_namespace -bn ${TF_VAR_prefix}-agent-bucket --src-dir sample_files --overwrite --content-type auto
 
 # RAG - Ingestion
+echo "-- Running RAG Ingestion ----------------------------------------------"
 oci generative-ai-agent data-ingestion-job create --compartment-id $TF_VAR_compartment_ocid --data-source-id $AGENT_DATASOURCE_OCID
 
 # AGENT TOOLS
 ## RAG-TOOL
+echo "-- Creating RAG-TOOL --------------------------------------------------"
 oci generative-ai-agent tool create-tool-rag-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
@@ -29,6 +31,7 @@ oci generative-ai-agent tool create-tool-rag-tool-config \
   }]"
 
 ## FUNCTION-TOOL
+echo "-- Creating FUNCTION-TOOL ---------------------------------------------"
 oci generative-ai-agent tool create-tool-function-calling-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
@@ -46,6 +49,7 @@ oci generative-ai-agent tool create-tool-function-calling-tool-config \
   }"
 
 ## SQL-TOOL
+echo "-- Creating SQL-TOOL --------------------------------------------------"
 oci generative-ai-agent tool create-tool-sql-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
@@ -68,6 +72,8 @@ oci generative-ai-agent tool create-tool-sql-tool-config \
   --tool-config-model-size LARGE
 
 title "INSTALLATION DONE"
+echo
+echo "Some background jobs are still running (ex: RAG Ingestion). Please wait 5 mins."
 echo
 echo "-----------------------------------------------------------------------"
 echo "Streamlit:"
