@@ -5,3 +5,8 @@ streamlit
 oci
 
 # Others
+diagrams
+
+# Langchain
+langgraph 
+langchain_community

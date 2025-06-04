@@ -4,15 +4,24 @@ import json
 import datetime
 from oci import generative_ai_agent_runtime as genai_runtime
 
+import os, io, glob
+# from oci_models import get_llm
+from langchain.prompts import ChatPromptTemplate
+from langchain.chains import LLMChain
+from langchain_community.chat_models.oci_generative_ai import ChatOCIGenAI
+
 # --- Configuration ---
-compartment_id = "ocid1.compartment.oc1..aaaaaaaabltj4ujxwtaqonbcd5db7xgcqk5dxxksggkgebxnfydcdu2xl54a"
-agent_endpoint = "https://agent-runtime.generativeai.eu-frankfurt-1.oci.oraclecloud.com"
-agent_id = "ocid1.genaiagentendpoint.oc1.eu-frankfurt-1.amaaaaaa2xxap7yaluauwhdt73qzvkqd2fdjstr6wa5a32f7qijeci5f4fbq"
-config = oci.config.from_file('~/.oci/config', 'DEFAULT')
+compartment_id = os.getenv("TF_VAR_compartment_ocid")
+region = os.getenv("TF_VAR_region")
+agent_endpoint = "https://agent-runtime.generativeai."+region+".oci.oraclecloud.com"
+agent_id = os.getenv("TF_VAR_agent_endpoint_ocid")
+signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+config = {'region': signer.region, 'tenancy': signer.tenancy_id}
 
 # --- Initialize client ---
 client = genai_runtime.GenerativeAiAgentRuntimeClient(
-    config=config,
+    config = {}, 
+    signer=signer,
     service_endpoint=agent_endpoint,
     retry_strategy=oci.retry.NoneRetryStrategy()
 )
@@ -34,11 +43,6 @@ def email(customerEmail, subject, emailBodyContent):
     return {
         "confirmation": f"Email sent to {customerEmail} with subject '{subject}' and body '{emailBodyContent[:30]}...'"
     }
-
-import os, io, glob
-from oci_models import get_llm
-from langchain.prompts import ChatPromptTemplate
-from langchain.chains import LLMChain
 
 def generate_architecture_diagram(steps: str):
     template = """
@@ -63,6 +67,7 @@ def generate_architecture_diagram(steps: str):
     - Start with: `from diagrams import Diagram, Cluster`
     - Only include valid Python code (no explanations or markdown).
     - Use `show=False` in the Diagram constructor.
+    - Create a file named "diagram.png"
 
     Now, generate the code based only on the following request:
 
@@ -71,7 +76,14 @@ def generate_architecture_diagram(steps: str):
     Code:
     """
     prompt = ChatPromptTemplate.from_template(template)
-    llm = get_llm(temperature=0.0)
+    llm = ChatOCIGenAI(
+        auth_type='INSTANCE_PRINCIPAL',
+        model_id="meta.llama-4-maverick-17b-128e-instruct-fp8",
+        service_endpoint="https://inference.generativeai.us-chicago-1.oci.oraclecloud.com",
+        model_kwargs={"temperature": 0.0, "max_tokens": 4000},
+        compartment_id=compartment_id
+    ) 
+    # llm = get_llm(temperature=0.0)
     qa_chain = LLMChain(llm=llm, prompt=prompt)
     response = qa_chain.invoke({"steps": steps})
     code = response["text"].replace("`", "").replace("python", "")

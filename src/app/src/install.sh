@@ -4,6 +4,7 @@ cd $SCRIPT_DIR
 
 # https://yum.oracle.com/oracle-linux-python.html
 
+sudo dnf install -y graphviz
 sudo dnf install -y python3.12 python3.12-pip python3-devel
 sudo pip3.12 install pip --upgrade
 
