@@ -18,6 +18,7 @@ EOT
 
 export TNS_ADMIN=$SCRIPT_DIR
 sqlplus -L $DB_USER/$DB_PASSWORD@DB @oracle.sql $DB_PASSWORD
+sqlplus -L $DB_USER/$DB_PASSWORD@DB @dept_emp.sql $DB_PASSWORD
 
 /usr/lib/oracle/21/client64/bin/sqlldr $DB_USER/$DB_PASSWORD@DB CONTROL=supportagents.ctl
 /usr/lib/oracle/21/client64/bin/sqlldr $DB_USER/$DB_PASSWORD@DB CONTROL=tickets.ctl

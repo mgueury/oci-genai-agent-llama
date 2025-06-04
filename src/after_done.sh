@@ -76,7 +76,12 @@ echo
 echo "Some background jobs are still running (ex: RAG Ingestion). Please wait 5 mins."
 echo
 echo "-----------------------------------------------------------------------"
-echo "Streamlit:"
+echo "Database"
+echo "https://${APIGW_HOSTNAME}/ords/_/landing"
+echo "  Password: $TF_VAR_db_password"
+echo
+echo "-----------------------------------------------------------------------"
+echo "Chat"
 echo "http://${BASTION_IP}:8080/"
 echo
 
