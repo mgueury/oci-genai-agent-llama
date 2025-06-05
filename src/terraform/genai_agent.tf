@@ -83,3 +83,19 @@ resource "oci_generative_ai_agent_agent_endpoint" "starter_agent_endpoint" {
   }
   freeform_tags = local.freeform_tags  
 }
+
+# -- Policies ----------------------------------------------------------------
+
+resource "oci_identity_policy" "starter_search_policy" {
+    provider       = oci.home    
+    name           = "${var.prefix}-policy"
+    description    = "${var.prefix} policy"
+    compartment_id = local.lz_serv_cmp_ocid
+
+    statements = [
+        "allow any-user to manage generative-ai-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${oci_core_instance.starter_bastion.id}'",
+        "allow any-user to manage genai-agent-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${oci_core_instance.starter_bastion.id}'",
+        "allow any-user to manage generative-ai-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${data.oci_database_autonomous_database.starter_atp.autonomous_database_id}'",
+        "allow any-user to manage genai-agent-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${data.oci_database_autonomous_database.starter_atp.autonomous_database_id}'"
+    ]
+}

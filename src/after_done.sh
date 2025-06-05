@@ -35,18 +35,18 @@ echo "-- Creating FUNCTION-TOOL ---------------------------------------------"
 oci generative-ai-agent tool create-tool-function-calling-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
-  --display-name custom-tool \
-  --description custom-tool \
+  --display-name generate_architecture_diagram \
+  --description "generates architecture diagram" \
   --tool-config-function "{
-    \"name\": \"add\",
-    \"description\": \"Add 2 numbers\",
-    \"parameters\": {
-        \"type\": \"object\",
-        \"properties\": \"{\\\"number1\\\":{\\\"type\\\":\\\"string\\\",\\\"description\\\":\\\"Number 1 to add \\\"},\\\"number2\\\":{\\\"type\\\":\\\"string\\\",\\\"description\\\":\\\"Number 2 to add\\\"}}\",
-        \"required\": \"[\\\"number1\\\",\\\"number2\\\"]\",
-        \"additionalProperties\": \"false\"
+    \"name\": \"generate_architecture_diagram\",
+    \"description\": \"generates architecture diagram\",
+    \"parameters\": {  
+      \"type\":\"object\",
+      \"properties\":\"{\\\"steps\\\":{\\\"type\\\":\\\"string\\\",\\\"description\\\":\\\"Description of the cloud architecture to visualize.\\\"}}\",
+      \"required\":\"[\\\"steps\\\"]\",
+      \"additionalProperties\":\"false\"
     }
-  }"
+  }"  
 
 ## SQL-TOOL
 echo "-- Creating SQL-TOOL --------------------------------------------------"
@@ -61,12 +61,13 @@ oci generative-ai-agent tool create-tool-sql-tool-config \
   }" \
   --tool-config-database-schema "{
     \"inputLocationType\": \"INLINE\",
-    \"content\": \"create table dept(  \\ndeptno     number(2,0),  \\ndname      varchar2(14),  \\nloc        varchar2(13),  \\nconstraint pk_dept primary key (deptno)  \\n);\\n\\ncreate table emp(  \\nempno    number(4,0),  \\nename    varchar2(10),  \\njob      varchar2(9),  \\nmgr      number(4,0),  \\nhiredate date,  \\nsal      number(7,2),  \\ncomm     number(7,2),  \\ndeptno   number(2,0),  \\nconstraint pk_emp primary key (empno),  \\nconstraint fk_deptno foreign key (deptno) references dept (deptno)  \\n);\"     
+    \"content\": \"CREATE TABLE SupportAgents (\\n    AgentID NUMBER PRIMARY KEY,\\n    FirstName VARCHAR2(50) NOT NULL,\\n    LastName VARCHAR2(50) NOT NULL,\\n    Email VARCHAR2(100) UNIQUE NOT NULL,\\n    Phone VARCHAR2(20)\\n);\\n\\nCREATE TABLE Tickets (\\n    TicketID NUMBER PRIMARY KEY,\\n    CustomerID NUMBER NOT NULL,\\n    Subject VARCHAR2(200) NOT NULL,\\n    Description CLOB NOT NULL,\\n    CreatedDate DATE DEFAULT SYSTIMESTAMP NOT NULL,\\n    LastUpdatedDate DATE DEFAULT SYSTIMESTAMP NOT NULL,\\n    StatusID NUMBER NOT NULL,\\n    AssignedToAgentID NUMBER,\\n    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),\\n    FOREIGN KEY (StatusID) REFERENCES TicketStatus(StatusID),\\n    FOREIGN KEY (AssignedToAgentID) REFERENCES SupportAgents(AgentID)\\n);\"     
   }" \
   --tool-config-table-and-column-description "{
     \"inputLocationType\": \"INLINE\",
-    \"content\": \"Description of the important tables in the schema:\n\nEMP         Employee names and other information\nDEPT        Department names and other information \n\nDescription of the important columns of the tables in the schema:\n\nEMP TABLE    \nemp.empno: Employee number (a unique identifier for each employee).\nemp.ename: Employee name (the name of the employee in uppercase).\nemp.job: Employee job title (the employee's job in uppercase, e.g., 'MANAGER', 'CLERK').\nemp.mgr: Manager employee number (the empno of the employee's manager).  This establishes a hierarchical relationship within the employees.\nemp.hiredate: Employee hire date (the date when the employee was hired).\nemp.sal: Employee salary (the employee's salary).\nemp.comm: Employee commission (any commission earned by the employee).\nemp.deptno: Department number (the deptno of the department the employee belongs to).  This is a foreign key linking back to the dept table.\n\nDEPT TABLE    \ndept.deptno: Department number (a unique identifier for each department).\ndept.dname: Department name (the name of the department in uppercase, e.g., 'SALES', 'ACCOUNTING').\ndept.loc: Location of the department (the city in uppercase where the department is located).\"
+    \"content\": \"SupportAgents table\\n- Each in this table contains information about a support agent which handles support tickets\\n\\nColumns:\\nAgentID - number, a unique identifier for the support agent\\nFirstName - string, the support agent's first name\\nLastName - string, the support agent's last name\\nEmail - string, the support agent's work email\\nPhone - string, the support agent's work phone\\n\\n\\nTickets table\\n- Each record in this table contains information about an issue reported by a customer alongside information about the issue as well as the status this is issue is currently in and the support agent assigned to handle the issue.\\n\\nColumns:\\nTicketID - number, a unique identifier for the ticket\\nCustomerName - Customer Name that reported the issue\\nSubject - string, a short description of the issue\\nDescription - string, a full description of the issue, contains all of the information required to understand and address the issue\\nCreatedDate - datetime, the date and time at which the ticket was created by the customer\\nLastUpdatedDate - datetime, the date and time of the last action taken by a support agent regarding this ticket\\nStatusID - number, status of the ticket\\nAssignedToAgentID - number, a support agent ID from the SupportAgents table representing the support agent assigned to handle the ticket.\"
   }" \
+  --tool-config-should-enable-sql-execution true \
   --tool-config-should-enable-self-correction true \
   --tool-config-dialect ORACLE_SQL \
   --tool-config-model-size LARGE

@@ -112,6 +112,8 @@ def handle_required_actions(response_data):
                 result = email(**args)
             elif fn.name == "generate_architecture_diagram":
                 result = generate_architecture_diagram(**args)
+            else:
+                result = { "unknown tool", fn.name }
             performed_actions.append({
                 "actionId": action.action_id,
                 "performedActionType": "FUNCTION_CALLING_PERFORMED_ACTION",
