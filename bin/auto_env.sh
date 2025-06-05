@@ -133,7 +133,7 @@ else
      if grep -q "VM.Standard.x86.Generic" $TARGET_DIR/shapes.list; then
        auto_echo "Fungible shape VM.Standard.x86.Generic found"
      else
-       export TF_VAR_instance_shape="VM.Standard.E4.Flex"
+       guess_available_shape
        echo "Warning: fungible shape VM.Standard.x86.Generic not found. Using $TF_VAR_instance_shape"
      fi
   fi
