@@ -86,7 +86,7 @@ resource "oci_generative_ai_agent_agent_endpoint" "starter_agent_endpoint" {
 
 # -- Policies ----------------------------------------------------------------
 
-resource "oci_identity_policy" "starter_search_policy" {
+resource "oci_identity_policy" "starter_policy" {
     provider       = oci.home    
     name           = "${var.prefix}-policy"
     description    = "${var.prefix} policy"
