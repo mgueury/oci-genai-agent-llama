@@ -113,6 +113,7 @@ elif [ "$ARG1" == "rebuild" ]; then
   exit_on_error
   
   rm -Rf $TARGET_DIR
+  mkdir $TARGET_DIR
   # Build
   LOG_NAME=$TARGET_DIR/logs/build.${DATE_POSTFIX}.log
   $BIN_DIR/build_all.sh ${@:2} 2>&1 | tee $LOG_NAME

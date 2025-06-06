@@ -83,6 +83,15 @@ resource "oci_apigateway_deployment" "starter_apigw_deployment" {
   gateway_id     = local.apigw_ocid
   path_prefix    = "/app"
   specification {
+    logging_policies {
+      access_log {
+        is_enabled = true
+      }
+      execution_log {
+        #Optional
+        is_enabled = true
+      }
+    }    
     routes {
       path    = "/evaluation"
       methods = [ "ANY" ]
