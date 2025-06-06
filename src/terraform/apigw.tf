@@ -93,11 +93,11 @@ resource "oci_apigateway_deployment" "starter_apigw_deployment" {
       }
     }    
     routes {
-      path    = "/evaluation"
+      path    = "/evaluate"
       methods = [ "ANY" ]
       backend {
         type = "HTTP_BACKEND"
-        url    = "http://${data.oci_core_instance.starter_bastion.private_ip}:8000/evaluation"
+        url    = "http://${data.oci_core_instance.starter_bastion.private_ip}:8000/evaluate"
         connect_timeout_in_seconds = 10
         read_timeout_in_seconds = 120
         send_timeout_in_seconds = 120       
