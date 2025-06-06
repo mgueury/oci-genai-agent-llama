@@ -13,3 +13,7 @@ python3.12 -m venv myenv
 source myenv/bin/activate
 pip3 install --upgrade pip
 pip3 install -r requirements.txt
+
+# FastAPI
+sudo firewall-cmd --zone=public --add-port=8000/tcp --permanent
+sudo firewall-cmd --reload

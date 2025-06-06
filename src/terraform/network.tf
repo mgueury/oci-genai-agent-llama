@@ -138,7 +138,18 @@ resource "oci_core_security_list" "starter_security_list" {
     }
   }
 
-  // XXXXXX 0.0.0.0/0 ??
+  // FastAPI
+  ingress_security_rules {
+    protocol  = "6" // tcp
+    source    = local.cidr_vcn
+    stateless = false
+
+    tcp_options {
+      min = 8000
+      max = 8000
+    }
+  }  
+
   ingress_security_rules {
     protocol  = "6" // tcp
     source    = "0.0.0.0/0"
