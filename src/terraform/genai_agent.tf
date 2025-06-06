@@ -96,8 +96,8 @@ resource "oci_identity_policy" "starter_policy" {
         "allow any-user to manage generative-ai-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${oci_core_instance.starter_compute.id}'",
         "allow any-user to manage genai-agent-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${oci_core_instance.starter_compute.id}'",
         "allow any-user to manage generative-ai-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${data.oci_database_autonomous_database.starter_atp.autonomous_database_id}'",
-        "allow any-user to manage genai-agent-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${data.oci_database_autonomous_database.starter_atp.autonomous_database_id}'"
+        "allow any-user to manage genai-agent-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${data.oci_database_autonomous_database.starter_atp.autonomous_database_id}'",
+        "allow any-user to read database-tools-family in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${oci_generative_ai_agent_agent.starter_agent.id}'",
+        "allow any-user to read secret-bundle in compartment id ${local.lz_serv_cmp_ocid} where request.principal.id='${oci_generative_ai_agent_agent.starter_agent.id}'"
     ]
 }
-
-

@@ -217,7 +217,7 @@ find_availabilty_domain_for_shape() {
 
 # Guess the shape E6/E5/E4
 guess_available_shape() {
-  echo "Guessing for compute shape..."  
+  echo "Guessing compute shape..."  
   i=1
   for ad in `oci iam availability-domain list --compartment-id=$TF_VAR_tenancy_ocid | jq -r ".data[].name"` 
   do
