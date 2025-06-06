@@ -20,7 +20,7 @@ oci generative-ai-agent data-ingestion-job create --compartment-id $TF_VAR_compa
 
 # AGENT TOOLS
 ## RAG-TOOL
-echo "-- Creating RAG-TOOL --------------------------------------------------"
+title "Creating RAG-TOOL"
 oci generative-ai-agent tool create-tool-rag-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
@@ -31,7 +31,7 @@ oci generative-ai-agent tool create-tool-rag-tool-config \
   }]"
 
 ## FUNCTION-TOOL
-echo "-- Creating FUNCTION-TOOL ---------------------------------------------"
+title "Creating FUNCTION-TOOL"
 oci generative-ai-agent tool create-tool-function-calling-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
@@ -49,7 +49,7 @@ oci generative-ai-agent tool create-tool-function-calling-tool-config \
   }"  
 
 ## SQL-TOOL
-echo "-- Creating SQL-TOOL --------------------------------------------------"
+title "Creating SQL-TOOL"
 oci generative-ai-agent tool create-tool-sql-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
@@ -77,8 +77,14 @@ echo
 echo "Some background jobs are still running (ex: RAG Ingestion). Please wait 5 mins."
 echo
 echo "-----------------------------------------------------------------------"
+echo "Evaluation (API)
+echo "http://${APIGW_HOSTNAME}/app/evaluation"
+echo
+echo "-----------------------------------------------------------------------"
 echo "Database"
 echo "https://${APIGW_HOSTNAME}/ords/_/landing"
+echo "  Workspace: APEX_APP"
+echo "  User: APEX_APP"
 echo "  Password: $TF_VAR_db_password"
 echo
 echo "-----------------------------------------------------------------------"
