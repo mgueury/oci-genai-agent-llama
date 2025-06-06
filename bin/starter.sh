@@ -99,14 +99,19 @@ elif [ "$ARG1" == "ssh" ]; then
   else 
     echo "Unknown command: $ARG1 $ARG2"
   fi    
-elif [ "$ARG1" == "destroy_pull_build" ]; then
+elif [ "$ARG1" == "rebuild" ]; then
+  . $BIN_DIR/shared_bash_function.sh
+
   # Destroy
   LOG_NAME=$TARGET_DIR/logs/destroy.${DATE_POSTFIX}.log
   ln -sf $LOG_NAME $TARGET_DIR/destroy.log
   $BIN_DIR/destroy_all.sh ${@:2} 2>&1 | tee $LOG_NAME
   exit_on_error
+  
   # Pull
   git pull
+  exit_on_error
+  
   rm -Rf $TARGET_DIR
   # Build
   LOG_NAME=$TARGET_DIR/logs/build.${DATE_POSTFIX}.log

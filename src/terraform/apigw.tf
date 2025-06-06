@@ -14,7 +14,7 @@ locals {
 # The reason of the 3 entries is to allow to make it work when the APIGW is shared with other URLs (ex: testsuite)
 resource "oci_apigateway_deployment" "starter_apigw_deployment_ords" {
   compartment_id = local.lz_app_cmp_ocid
-  display_name   = "${var.prefix}-apigw-deployment"
+  display_name   = "${var.prefix}-apigw-deployment-ords"
   gateway_id     = oci_apigateway_gateway.starter_apigw.id
   path_prefix    = "/ords"
   specification {
@@ -46,7 +46,7 @@ resource "oci_apigateway_deployment" "starter_apigw_deployment_ords" {
 
 resource "oci_apigateway_deployment" "starter_apigw_deployment_i" {
   compartment_id = local.lz_app_cmp_ocid
-  display_name   = "${var.prefix}-apigw-deployment"
+  display_name   = "${var.prefix}-apigw-deployment-i"
   gateway_id     = oci_apigateway_gateway.starter_apigw.id
   path_prefix    = "/i"
   specification {
@@ -74,4 +74,33 @@ resource "oci_apigateway_deployment" "starter_apigw_deployment_i" {
     }
   }
   freeform_tags = local.freeform_tags
+}
+
+resource "oci_apigateway_deployment" "starter_apigw_deployment" {   
+  compartment_id = local.lz_web_cmp_ocid
+  display_name   = "${var.prefix}-apigw-deployment-app"
+  gateway_id     = local.apigw_ocid
+  path_prefix    = "/app"
+  specification {
+    routes {
+      path    = "/evaluation"
+      methods = [ "ANY" ]
+      backend {
+        type = "HTTP_BACKEND"
+        url    = "http://${data.oci_core_instance.starter_bastion.private_ip}:8000/evaluation"
+        connect_timeout_in_seconds = 10
+        read_timeout_in_seconds = 30
+        send_timeout_in_seconds = 30        
+      }
+    }    
+    routes {
+      path    = "/streamlit"
+      methods = [ "ANY" ]
+      backend {
+        type = "HTTP_BACKEND"
+        url    = "http://${data.oci_core_instance.starter_bastion.public_ip}:8080/"
+      }
+    }
+  }
+  freeform_tags = local.api_tags
 }

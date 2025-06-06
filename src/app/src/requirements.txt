@@ -10,3 +10,7 @@ diagrams
 # Langchain
 langgraph 
 langchain_community
+
+# FastAPI
+fastapi 
+uvicorn
