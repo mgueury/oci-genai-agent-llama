@@ -99,9 +99,9 @@ resource "oci_apigateway_deployment" "starter_apigw_deployment" {
       methods = [ "ANY" ]
       backend {
         type = "HTTP_BACKEND"
-        url    = "http://${data.oci_core_instance.starter_bastion.public_ip}:8080/"
+        url    = "http://${data.oci_core_instance.starter_bastion.private_ip}:8080/"
       }
     }
   }
-  freeform_tags = local.api_tags
+  freeform_tags = local.freeform_tags
 }
