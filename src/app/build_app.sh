@@ -20,6 +20,9 @@ if is_deploy_compute; then
   replace_db_user_password_in_file ../../target/compute/$APP_DIR/start.sh
   if [ -f $TARGET_DIR/compute/$APP_DIR/env.sh ]; then 
     get_id_from_tfstate "AGENT_ENDPOINT_OCID" "starter_agent_endpoint" 
+    oci generative-ai model-collection list-models --compartment-id $TF_VAR_compartment_ocid --all > $TARGET_DIR/genai_models.json 
+    export TF_VAR_genai_meta_model=`cat $TARGET_DIR/genai_models.json | jq -r '.data.items[] | select(.vendor=="meta") | .["display-name"] ' | head -n 1`
+    echo $TF_VAR_genai_meta_model
     file_replace_variables $TARGET_DIR/compute/$APP_DIR/env.sh
   fi 
 else

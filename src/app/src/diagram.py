@@ -78,7 +78,7 @@ def generate_architecture_diagram(steps: str):
     prompt = ChatPromptTemplate.from_template(template)
     llm = ChatOCIGenAI(
         auth_type='INSTANCE_PRINCIPAL',
-        model_id="meta.llama-4-maverick-17b-128e-instruct-fp8",
+        model_id=os.getenv("TF_VAR_genai_meta_model"),
         service_endpoint="https://inference.generativeai.us-chicago-1.oci.oraclecloud.com",
         model_kwargs={"temperature": 0.0, "max_tokens": 4000},
         compartment_id=compartment_id
