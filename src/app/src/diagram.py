@@ -11,9 +11,11 @@ import uvicorn
 from oci import generative_ai_agent_runtime as genai_runtime
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
+from langchain_community.chat_models.oci_generative_ai import ChatOCIGenAI
 
 # Test API
 # curl http://localhost:8000/evaluate?question=Who%20is%20the%20busiest%20agent%3F
+# curl https://apigw/app/evaluate?question=Who%20is%20the%20busiest%20agent%3F
 
 # --- Configuration ---
 compartment_id = os.getenv("TF_VAR_compartment_ocid")
@@ -205,7 +207,14 @@ api.add_middleware(
 
 @api.get("/evaluate")
 def evaluate(question: str = Query(..., description="Ask a question to the agent")):
-    session_id = ensure_session()
+    # session_id = ensure_session()
+    session_details = genai_runtime.models.CreateSessionDetails(
+        display_name="Unified Session",
+        description="Shared session for Streamlit and FastAPI"
+    )
+    session = client.create_session(session_details, agent_id)
+    session_id = session.data.id
+
     chat_details = genai_runtime.models.ChatDetails(
         user_message=question,
         should_stream=False,
@@ -230,4 +239,5 @@ def evaluate(question: str = Query(..., description="Ask a question to the agent
 def run_api():
     uvicorn.run(api, host="0.0.0.0", port=8000)
 
+print( "hello", flush=True )
 threading.Thread(target=run_api, daemon=True).start()

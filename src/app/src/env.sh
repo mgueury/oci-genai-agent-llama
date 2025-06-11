@@ -10,3 +10,4 @@ export TF_VAR_region="##TF_VAR_region##"
 export TF_VAR_agent_endpoint_ocid="##AGENT_ENDPOINT_OCID##"
 export TF_VAR_genai_meta_model="##TF_VAR_genai_meta_model##"
 
+export APIGW_HOSTNAME="##APIGW_HOSTNAME##"

@@ -81,14 +81,14 @@ echo "Evaluation (API)
 echo "http://${APIGW_HOSTNAME}/app/evaluation"
 echo
 echo "-----------------------------------------------------------------------"
-echo "Database"
+echo "AI Eval (APEX)"
 echo "https://${APIGW_HOSTNAME}/ords/_/landing"
 echo "  Workspace: APEX_APP"
 echo "  User: APEX_APP"
 echo "  Password: $TF_VAR_db_password"
 echo
 echo "-----------------------------------------------------------------------"
-echo "Chat"
+echo "Chat (Streamlit)"
 echo "http://${BASTION_IP}:8080/"
 echo
 

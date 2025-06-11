@@ -17,3 +17,18 @@ pip3 install -r requirements.txt
 # FastAPI
 sudo firewall-cmd --zone=public --add-port=8000/tcp --permanent
 sudo firewall-cmd --reload
+
+# Configure APEX settings
+export TNS_ADMIN=$HOME/db
+sqlcl/bin/sql $DB_USER/$DB_PASSWORD@DB << EOF
+begin
+  delete from AI_CONFIG;
+  insert into AI_CONFIG( key, value ) values ( 'compartment_ocid', '$TF_VAR_compartment_ocid' );
+  insert into AI_CONFIG( key, value ) values ( 'qa_url', 'https://$APIGW_HOSTNAME/app/evaluate?question=' );
+  insert into AI_CONFIG( key, value ) values ( 'region', '$TF_VAR_region' );
+  insert into AI_CONFIG( key, value ) values ( 'llama_model', '$TF_VAR_genai_meta_model' );
+  commit;
+end;
+/
+exit;
+EOF
