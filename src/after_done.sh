@@ -81,11 +81,16 @@ echo "Evaluation (API)"
 echo "http://${APIGW_HOSTNAME}/app/evaluation"
 echo
 echo "-----------------------------------------------------------------------"
-echo "AI Eval (APEX)"
+echo "APEX Builder"
 echo "https://${APIGW_HOSTNAME}/ords/_/landing"
 echo "  Workspace: APEX_APP"
 echo "  User: APEX_APP"
 echo "  Password: $TF_VAR_db_password"
+echo
+echo "-----------------------------------------------------------------------"
+echo "AI Eval (APEX)"
+echo "https://${APIGW_HOSTNAME}/ords/r/apex_app/apex_app/"
+echo "  User: APEX_APP / $TF_VAR_db_password"
 echo
 echo "-----------------------------------------------------------------------"
 echo "Chat (Streamlit)"

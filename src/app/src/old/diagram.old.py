@@ -9,24 +9,17 @@ from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from oci import generative_ai_agent_runtime as genai_runtime
+from oci_models import get_llm
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 
-# Test API
-# curl http://localhost:8000/evaluate?question=Who%20is%20the%20busiest%20agent%3F
-# curl https://apigw/app/evaluate?question=Who%20is%20the%20busiest%20agent%3F
-
-# --- Configuration ---
-compartment_id = os.getenv("TF_VAR_compartment_ocid")
-region = os.getenv("TF_VAR_region")
-agent_endpoint = "https://agent-runtime.generativeai."+region+".oci.oraclecloud.com"
-agent_id = os.getenv("TF_VAR_agent_endpoint_ocid")
-signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
-config = {'region': signer.region, 'tenancy': signer.tenancy_id}
+# --- OCI Configuration ---
+agent_endpoint = "https://agent-runtime.generativeai.eu-frankfurt-1.oci.oraclecloud.com"
+agent_id = "ocid1.genaiagentendpoint.oc1.eu-frankfurt-1.amaaaaaa2xxap7yaluauwhdt73qzvkqd2fdjstr6wa5a32f7qijeci5f4fbq"
+config = oci.config.from_file("~/.oci/config", "DEFAULT")
 
 client = genai_runtime.GenerativeAiAgentRuntimeClient(
-    config = {}, 
-    signer=signer,
+    config=config,
     service_endpoint=agent_endpoint,
     retry_strategy=oci.retry.NoneRetryStrategy()
 )
@@ -58,7 +51,6 @@ def generate_architecture_diagram(steps: str):
     You are an expert cloud engineer who writes clean, syntactically correct Python code using the diagrams module.
     ONLY use valid OCI classes listed below.
     Start your code with 'from diagrams import Diagram, Cluster' and use show=False.
-    Create a file named "diagram.png"    
 
     Valid Classes:
     - diagrams.oci.compute: VM, Container, OKE, BareMetal, Functions, InstancePools, OCIR, Autoscale
@@ -76,13 +68,7 @@ def generate_architecture_diagram(steps: str):
     Code:
     """
     prompt = ChatPromptTemplate.from_template(template)
-    llm = ChatOCIGenAI(
-        auth_type='INSTANCE_PRINCIPAL',
-        model_id=os.getenv("TF_VAR_genai_meta_model"),
-        service_endpoint="https://inference.generativeai."+region+".oci.oraclecloud.com",
-        model_kwargs={"temperature": 0.0, "max_tokens": 4000},
-        compartment_id=compartment_id
-    ) 
+    llm = get_llm(temperature=0.0)
     qa_chain = LLMChain(llm=llm, prompt=prompt)
     response = qa_chain.invoke({"steps": steps})
     code = response["text"].replace("`", "").replace("python", "")
