@@ -22,11 +22,10 @@ sudo firewall-cmd --reload
 export TNS_ADMIN=$HOME/db
 $HOME/db/sqlcl/bin/sql $DB_USER/$DB_PASSWORD@DB << EOF
 begin
-  delete from AI_CONFIG;
-  insert into AI_CONFIG( key, value ) values ( 'compartment_ocid', '$TF_VAR_compartment_ocid' );
-  insert into AI_CONFIG( key, value ) values ( 'qa_url', 'https://$APIGW_HOSTNAME/app/evaluate?question=' );
-  insert into AI_CONFIG( key, value ) values ( 'region', '$TF_VAR_region' );
-  insert into AI_CONFIG( key, value ) values ( 'llama_model', '$TF_VAR_genai_meta_model' );
+  update APEX_APP.AI_CONFIG set value='$TF_VAR_compartment_ocid' where key='compartment_ocid';
+  update APEX_APP.AI_CONFIG set value='https://$APIGW_HOSTNAME/app/evaluate?question=' where key='qa_url';
+  update APEX_APP.AI_CONFIG set value='$TF_VAR_region' where key='region';
+  update APEX_APP.AI_CONFIG set value='$TF_VAR_genai_meta_model' where key='llama_model';
   commit;
 end;
 /
