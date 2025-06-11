@@ -77,7 +77,7 @@ echo
 echo "Some background jobs are still running (ex: RAG Ingestion). Please wait 5 mins."
 echo
 echo "-----------------------------------------------------------------------"
-echo "Evaluation (API)
+echo "Evaluation (API)"
 echo "http://${APIGW_HOSTNAME}/app/evaluation"
 echo
 echo "-----------------------------------------------------------------------"
