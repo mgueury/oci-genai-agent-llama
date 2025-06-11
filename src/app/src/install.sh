@@ -20,7 +20,7 @@ sudo firewall-cmd --reload
 
 # Configure APEX settings
 export TNS_ADMIN=$HOME/db
-sqlcl/bin/sql $DB_USER/$DB_PASSWORD@DB << EOF
+$HOME/db/sqlcl/bin/sql $DB_USER/$DB_PASSWORD@DB << EOF
 begin
   delete from AI_CONFIG;
   insert into AI_CONFIG( key, value ) values ( 'compartment_ocid', '$TF_VAR_compartment_ocid' );
