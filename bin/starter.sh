@@ -113,11 +113,12 @@ elif [ "$ARG1" == "rebuild" ]; then
   exit_on_error
   
   rm -Rf $TARGET_DIR
-  mkdir $TARGET_DIR
+  mkdir $TARGET_DIR/log
+
   # Build
   LOG_NAME=$TARGET_DIR/logs/build.${DATE_POSTFIX}.log
+  ln -sf $LOG_NAME $TARGET_DIR/build.log  
   $BIN_DIR/build_all.sh ${@:2} 2>&1 | tee $LOG_NAME
-  exit_on_error
 elif [ "$ARG1" == "terraform" ]; then
   if [ "$ARG2" == "plan" ]; then
     $BIN_DIR/terraform_plan.sh ${@:3}
