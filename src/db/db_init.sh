@@ -18,7 +18,6 @@ EOT
 
 export TNS_ADMIN=$SCRIPT_DIR
 
-
 # Install SQLCL (Java program)
 wget https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
 rm -Rf sqlcl
@@ -76,7 +75,6 @@ end;
 quit
 EOF
 
-export TNS_ADMIN=$HOME/db
 sqlcl/bin/sql $DB_USER/$DB_PASSWORD@DB @import_application.sql
 
 sqlplus -L $DB_USER/$DB_PASSWORD@DB @tables.sql $DB_PASSWORD

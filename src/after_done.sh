@@ -28,7 +28,8 @@ oci generative-ai-agent tool create-tool-rag-tool-config \
   --description rag-tool \
   --tool-config-knowledge-base-configs "[{
     \"knowledgeBaseId\": \"${AGENT_KB_OCID}\"
-  }]"
+  }]" \
+  --wait-for-state SUCCEEDED --wait-for-state FAILED
 
 ## FUNCTION-TOOL
 title "Creating FUNCTION-TOOL"
@@ -46,7 +47,9 @@ oci generative-ai-agent tool create-tool-function-calling-tool-config \
       \"required\":\"[\\\"steps\\\"]\",
       \"additionalProperties\":\"false\"
     }
-  }"  
+  }" \
+  --wait-for-state SUCCEEDED --wait-for-state FAILED
+
 
 ## SQL-TOOL
 title "Creating SQL-TOOL"
@@ -70,7 +73,8 @@ oci generative-ai-agent tool create-tool-sql-tool-config \
   --tool-config-should-enable-sql-execution true \
   --tool-config-should-enable-self-correction true \
   --tool-config-dialect ORACLE_SQL \
-  --tool-config-model-size LARGE
+  --tool-config-model-size LARGE \
+  --wait-for-state SUCCEEDED --wait-for-state FAILED
 
 title "INSTALLATION DONE"
 echo

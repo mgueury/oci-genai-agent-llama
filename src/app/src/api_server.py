@@ -7,7 +7,6 @@ import json
 from oci import generative_ai_agent_runtime as genai_runtime
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
-from oci_models import get_llm
 import os, glob
 import oci
 
