@@ -11,6 +11,7 @@ import uvicorn
 from oci import generative_ai_agent_runtime as genai_runtime
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
+from langchain_community.chat_models.oci_generative_ai import ChatOCIGenAI
 
 # Test API
 # curl http://localhost:8000/evaluate?question=Who%20is%20the%20busiest%20agent%3F
