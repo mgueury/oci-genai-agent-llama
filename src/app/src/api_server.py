@@ -106,10 +106,10 @@ def evaluate(
         )
         response = client.chat(agent_id, chat_details)
 
-    try:
-        parsed_answer = json.loads(response.data.message.content.text)
-    except:
-        parsed_answer = {"text": response.data.message.content.text}
+    # try:
+    #    parsed_answer = json.loads(response.data.message.content.text)
+    # except:
+    parsed_answer = response.data.message.content.text
 
     return {
         "question": question,
