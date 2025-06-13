@@ -82,7 +82,7 @@ echo "Some background jobs are still running (ex: RAG Ingestion). Please wait 5 
 echo
 echo "-----------------------------------------------------------------------"
 echo "Evaluation (API)"
-echo "http://${APIGW_HOSTNAME}/app/evaluation"
+echo "http://${APIGW_HOSTNAME}/app/evaluate?question=What%20is%20the%20importance%20of%20Virus%20and%20Intrusion%20Detection"
 echo
 echo "-----------------------------------------------------------------------"
 echo "APEX Builder"
