@@ -24,7 +24,7 @@ if submit and user_input.strip():
             "question": user_input,
             "session_id": st.session_state.session_id
         }
-        resp = requests.get("http://localhost:8000/evaluate", params=params)
+        resp = requests.post("http://localhost:8000/chat", json=params)
         data = resp.json()
         reply = data["answer"]
 

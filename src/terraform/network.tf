@@ -141,7 +141,7 @@ resource "oci_core_security_list" "starter_security_list" {
   // FastAPI
   ingress_security_rules {
     protocol  = "6" // tcp
-    source    = local.cidr_vcn
+    source    = "0.0.0.0/0"
     stateless = false
 
     tcp_options {

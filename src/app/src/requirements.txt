@@ -12,5 +12,6 @@ langgraph
 langchain_community
 
 # FastAPI
-fastapi 
-uvicorn
+waitress
+uvicorn[standard]   
+fastapi

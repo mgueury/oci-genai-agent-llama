@@ -20,10 +20,10 @@ sudo firewall-cmd --reload
 
 # Configure APEX settings
 export TNS_ADMIN=$HOME/db
-$HOME/db/sqlcl/bin/sql $DB_USER/$DB_PASSWORD@DB << EOF
+$HOME/db/sqlcl/bin/sql APEX_APP/$DB_PASSWORD@DB << EOF
 begin
   update APEX_APP.AI_CONFIG set value='$TF_VAR_compartment_ocid' where key='compartment_ocid';
-  update APEX_APP.AI_CONFIG set value='https://$APIGW_HOSTNAME/app/evaluate?question=' where key='qa_url';
+  update APEX_APP.AI_CONFIG set value='https://$APIGW_HOSTNAME/app/chat' where key='qa_url';
   update APEX_APP.AI_CONFIG set value='$TF_VAR_region' where key='region';
   update APEX_APP.AI_CONFIG set value='$TF_VAR_genai_meta_model' where key='llama_model';
   commit;

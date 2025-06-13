@@ -25,7 +25,7 @@ oci generative-ai-agent tool create-tool-rag-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
   --display-name rag-tool \
-  --description "Uses for generic question that other tool can not answer" \
+  --description "Use for generic questions that other tools can not answer" \
   --tool-config-knowledge-base-configs "[{
     \"knowledgeBaseId\": \"${AGENT_KB_OCID}\"
   }]" \

@@ -93,11 +93,22 @@ resource "oci_apigateway_deployment" "starter_apigw_deployment" {
       }
     }    
     routes {
-      path    = "/evaluate"
+      path    = "/chat"
       methods = [ "ANY" ]
       backend {
         type = "HTTP_BACKEND"
-        url    = "http://${data.oci_core_instance.starter_bastion.private_ip}:8000/evaluate"
+        url    = "http://${data.oci_core_instance.starter_bastion.private_ip}:8000/chat"
+        connect_timeout_in_seconds = 10
+        read_timeout_in_seconds = 120
+        send_timeout_in_seconds = 120       
+      }
+    }    
+    routes {
+      path    = "/image"
+      methods = [ "ANY" ]
+      backend {
+        type = "HTTP_BACKEND"
+        url    = "http://${data.oci_core_instance.starter_bastion.private_ip}:8000/image"
         connect_timeout_in_seconds = 10
         read_timeout_in_seconds = 120
         send_timeout_in_seconds = 120       
