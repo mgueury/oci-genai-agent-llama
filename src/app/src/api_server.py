@@ -9,6 +9,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 import os, glob
 import oci
+from langchain_community.chat_models.oci_generative_ai import ChatOCIGenAI
 
 
 # --- Configuration ---
@@ -69,6 +70,7 @@ def handle_required_actions(response_data):
     for action in response_data.required_actions or []:
         if action.required_action_type == "FUNCTION_CALLING_REQUIRED_ACTION":
             fn = action.function_call
+            print( str(fn.arguments), flush=True )
             args = json.loads(fn.arguments)
             output = {}
             if fn.name == "email":
@@ -106,17 +108,16 @@ def evaluate(
         )
         response = client.chat(agent_id, chat_details)
 
-    # try:
-    #    parsed_answer = json.loads(response.data.message.content.text)
-    # except:
-    parsed_answer = response.data.message.content.text
+    try:
+       parsed_answer = json.loads(response.data.message.content.text)
+    except:
+       parsed_answer = response.data.message.content.text
 
     return {
         "question": question,
         "answer": parsed_answer,
         "session_id": sid
     }
-
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
