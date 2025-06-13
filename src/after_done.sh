@@ -25,7 +25,7 @@ oci generative-ai-agent tool create-tool-rag-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
   --display-name rag-tool \
-  --description rag-tool \
+  --description "Uses for generic question that other tool can not answer" \
   --tool-config-knowledge-base-configs "[{
     \"knowledgeBaseId\": \"${AGENT_KB_OCID}\"
   }]" \
@@ -37,7 +37,7 @@ oci generative-ai-agent tool create-tool-function-calling-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
   --display-name generate_architecture_diagram \
-  --description "generates architecture diagram" \
+  --description "Generates architecture diagram" \
   --tool-config-function "{
     \"name\": \"generate_architecture_diagram\",
     \"description\": \"generates architecture diagram\",
@@ -57,7 +57,7 @@ oci generative-ai-agent tool create-tool-sql-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
   --display-name sql-tool \
-  --description sql-tool \
+  --description "SQL tables with Support Agents and Tickets" \
   --tool-config-database-connection "{
     \"connectionId\": \"${DBTOOLS_OCID}\",
     \"connectionType\": \"DATABASE_TOOL_CONNECTION\"
