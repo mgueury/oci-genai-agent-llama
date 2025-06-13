@@ -19,6 +19,7 @@ sudo firewall-cmd --zone=public --add-port=8000/tcp --permanent
 sudo firewall-cmd --reload
 
 # Configure APEX settings
+. ./env.sh
 export TNS_ADMIN=$HOME/db
 $HOME/db/sqlcl/bin/sql $DB_USER/$DB_PASSWORD@DB << EOF
 begin
