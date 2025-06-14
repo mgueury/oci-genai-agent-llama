@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 import json
 import pandas as pd
+import urllib.parse
+from io import BytesIO
 
 st.set_page_config(page_title="OCI Generative Agent Chat")
 st.title("OCI Generative Agent Chat")
@@ -26,18 +28,27 @@ if submit and user_input.strip():
         }
         resp = requests.post("http://localhost:8000/chat", json=params)
         data = resp.json()
+        print( str(data), flush=True )
         reply = data["answer"]
-
+           
         try:
-            parsed = json.loads(reply)
-            if "executionResult" in parsed:
-                st.write("**Generated Query:**")
-                st.code(parsed.get("generatedQuery", ""), language="sql")
-                st.write("**Result:**")
-                df = pd.DataFrame(parsed["executionResult"])
-                st.dataframe(df)
-                reply = ""  # Avoid showing raw reply
+            if data.get("diagram_path"):
+                resp_img = requests.get("http://localhost:8000/image?path="+urllib.parse.quote_plus(data["diagram_path"]))
+                resp_img.raise_for_status() # Raise an exception for bad status codes
+                if "image" in resp_img.headers["Content-Type"]:
+                    image_bytes = BytesIO(resp_img.content)                
+                    st.image(image_bytes)
+            else:
+                parsed = json.loads(reply)
+                if "executionResult" in parsed:
+                    st.write("**Generated Query:**")
+                    st.code(parsed.get("generatedQuery", ""), language="sql")
+                    st.write("**Result:**")
+                    df = pd.DataFrame(parsed["executionResult"])
+                    st.dataframe(df)
+                    reply = ""  # Avoid showing raw reply
         except:
+            print( "EXCEPTION", flush=True )
             pass
 
         st.session_state.chat_history.append(("You", user_input))
