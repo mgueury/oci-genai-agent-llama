@@ -52,3 +52,13 @@ Temporary Items
 .csr
 .pem%  
 
+# Python environments
+src/app/src/myenv/
+src/app/src/venv/
+**/__pycache__/
+*.pyc
+
+# Environment files
+env.sh
+src/app/src/env.sh
+.env
