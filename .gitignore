@@ -62,3 +62,8 @@ src/app/src/venv/
 env.sh
 src/app/src/env.sh
 .env
+
+# Log files
+*.log
+src/app/src/api_server.log
+src/app/src/streamlit.log
