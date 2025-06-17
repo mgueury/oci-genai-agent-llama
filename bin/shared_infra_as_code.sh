@@ -9,8 +9,13 @@ infra_as_code_plan() {
     if [ "$TF_VAR_infra_as_code" == "terraform_object_storage" ]; then
       sed "s/XX_TERRAFORM_STATE_URL_XX/$TF_VAR_terraform_state_url/g" terraform.template.tf > terraform/terraform.tf
     fi  
-    terraform init -no-color
-    terraform plan
+    if command -v terraform  &> /dev/null; then
+      terraform init -no-color
+      terraform plan
+    elif command -v tofu  &> /dev/null; then
+      tofu init -no-color -upgrade
+      tofu plan
+    fi      
   fi
 }
 
@@ -24,8 +29,13 @@ infra_as_code_apply() {
     if [ "$TF_VAR_infra_as_code" == "terraform_object_storage" ]; then
       sed "s/XX_TERRAFORM_STATE_URL_XX/$TF_VAR_terraform_state_url/g" terraform.template.tf > terraform/terraform.tf
     fi  
-    terraform init -no-color -upgrade
-    terraform apply $@
+    if command -v terraform  &> /dev/null; then
+      terraform init -no-color -upgrade
+      terraform apply $@
+    elif command -v tofu  &> /dev/null; then
+      tofu init -no-color -upgrade
+      tofu apply $@
+    fi
     exit_on_error
   fi
 }
@@ -35,8 +45,13 @@ infra_as_code_destroy() {
   if [ "$TF_VAR_infra_as_code" == "resource_manager" ]; then
     resource_manager_destroy
   else
-    terraform init -upgrade
-    terraform destroy $@
+    if command -v terraform  &> /dev/null; then
+      terraform init -upgrade
+      terraform destroy $@
+    elif command -v tofu  &> /dev/null; then
+      tofu init -no-color -upgrade
+      tofu destroy $@
+    fi
   fi
 }
 
