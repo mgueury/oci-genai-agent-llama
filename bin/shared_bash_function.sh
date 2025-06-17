@@ -56,7 +56,7 @@ build_function() {
   fn update context oracle.compartment-id ${TF_VAR_compartment_ocid}
   fn update context api-url https://functions.${TF_VAR_region}.oraclecloud.com
   fn update context registry ${DOCKER_PREFIX}
-  # Set pipefail to get the error despite pip to tee
+  # Set pipefail to get the error despite pipe to tee
   set -o pipefail
   fn build -v | tee $TARGET_DIR/fn_build.log
   exit_on_error
@@ -212,7 +212,8 @@ find_availabilty_domain_for_shape() {
     fi
     i=$((i+1))
   done
-  error_exit "Error shape $1 not found" 
+  echo "Error shape $1 not found" 
+  exit 1
 }
 
 # Guess the shape E6/E5/E4
@@ -233,7 +234,6 @@ guess_available_shape() {
   done
   error_exit "Error no shape not found" 
 }
-
 
 # Get User Details (username and OCID)
 get_user_details() {
@@ -410,6 +410,18 @@ livelabs_green_button() {
     # fi
 
   fi
+}
+
+lunalab() {
+  if grep -q 'export TF_VAR_compartment_ocid="__TO_FILL__"' $PROJECT_DIR/env.sh; then    
+    if [ $USER = "luna.user" ]; then
+        echo "LunaLab - Luna User detected"
+    else
+        return
+    fi    
+    export TF_VAR_compartment_ocid=$OCI_COMPARTMENT_OCID
+    export TF_VAR_instance_shape="VM.Standard.E5.Flex"
+  fi 
 }
 
 create_deployment_in_apigw() {

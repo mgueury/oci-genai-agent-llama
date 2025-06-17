@@ -175,7 +175,10 @@ if declare -p | grep -q "__TO_FILL__"; then
   fi  
 
   # Livelabs Green Button (Autodetect compartment/vcn/subnet)
-  livelabs_green_button
+  livelabs_green_button 
+
+  # LunaLab (Autodetect compartment)
+  lunalab
 
   # COMPARTMENT_ID
   if [ "$TF_VAR_compartment_ocid" == "__TO_FILL__" ]; then
