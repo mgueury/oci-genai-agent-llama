@@ -1,3 +1,4 @@
+src/terraform/terraform_env.tfvars
 src/terraform/.terraform
 src/terraform/provider.tf
 src/terraform/env.tf

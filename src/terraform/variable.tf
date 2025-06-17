@@ -1,6 +1,15 @@
-variable tenancy_ocid {}
-variable region {}
-variable compartment_ocid {}
+variable tenancy_ocid {
+  description = "terraform.tfvars:The OCID of your tenancy"
+  type = string
+  }
+variable region {
+  description = "terraform.tfvars:Region"
+  type = string
+}
+variable compartment_ocid {
+  description = "terraform.tfvars:The OCID of your compartment"
+  type = string
+}
 # variable user_ocid {}
 variable ssh_public_key {}
 variable ssh_private_key {}
@@ -12,11 +21,14 @@ variable prefix { default = "starter" }
 variable language { default = "java" }
 variable java_version { default = "21" }
 
-variable db_user { default="" }
-variable db_password{ default="" }
+variable db_user { default="ADMIN" }
+variable db_password{
+  description = "terraform.tfvars:Your database password"
+  type = string
+}
 
 # Compute Instance size
-variable instance_shape { default = "VM.Standard.x86.Generic" }
+variable instance_shape {}
 variable instance_ocpus { default = 1 }
 variable instance_shape_config_memory_in_gbs { default = 8 }
 
@@ -37,6 +49,12 @@ variable availability_domain_number { default = 1 }
 # BRING_YOUR_OWN_LICENSE or LICENSE_INCLUDED
 variable license_model {
   default="BRING_YOUR_OWN_LICENSE"
+}
+
+#Gen AI Agents
+variable "namespace" {
+   description = "terraform.tfvars:namespace"
+  type = string
 }
 
 # Group

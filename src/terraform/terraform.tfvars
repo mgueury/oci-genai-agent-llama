@@ -1,0 +1,8 @@
+tenancy_ocid     = ""
+region           = ""
+compartment_ocid   = ""
+# ssh_public_key = ""
+# ssh_private_key = ""
+namespace = ""
+db_password = ""
+instance_shape = ""
