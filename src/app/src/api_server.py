@@ -195,3 +195,4 @@ def get_image(path: str = Query(...)):
     return FileResponse(path)
 
 # Run with: uvicorn test:app --reload
+# curl -X POST http://locahost:8000/chat   -H "Content-Type: application/json"   -d '{"question": "What is the importance of Virus and Intrusion Detection"}'
