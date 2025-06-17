@@ -1,4 +1,5 @@
 #!/bin/bash
+# - 2025-06_17 : added Tofu support for LunaLab
 set -e
 
 infra_as_code_plan() {
