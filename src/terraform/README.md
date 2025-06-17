@@ -21,8 +21,9 @@ region               = "<your-region>"              # e.g., us-chicago-1
 compartment_ocid     = "<your-compartment-ocid>"
 
 # SSH Keys for Compute Instance
-ssh_public_key       = "<path-to-public-key>"      # e.g., ~/.ssh/id_rsa.pub
-ssh_private_key      = "<path-to-private-key>"     # e.g., ~/.ssh/id_rsa
+ssh_public_key       = ""      # leave it blank - run this command in the terminal: export TF_VAR_ssh_public_key=$(cat ~/.ssh/id_rsa)
+ssh_private_key      = ""     # leave it blank - run this command in the terminal: export TF_VAR_ssh_private_key=$(cat ~/.ssh/id_rsa)
+
 
 # Database Configuration
 db_user             = "ADMIN"                     # Default admin user
