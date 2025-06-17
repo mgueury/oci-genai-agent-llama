@@ -86,7 +86,12 @@ resource "oci_generative_ai_agent_agent_endpoint" "starter_agent_endpoint" {
 
 # -- Policies ----------------------------------------------------------------
 
+variable no_policy {
+    default="false"
+}
+
 resource "oci_identity_policy" "starter_policy" {
+    count          = var.no_policy=="true" ? 0 : 1  
     provider       = oci.home    
     name           = "${var.prefix}-policy"
     description    = "${var.prefix} policy"

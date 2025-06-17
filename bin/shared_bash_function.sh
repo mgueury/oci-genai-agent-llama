@@ -421,6 +421,7 @@ lunalab() {
     fi    
     export TF_VAR_compartment_ocid=$OCI_COMPARTMENT_OCID
     export TF_VAR_instance_shape="VM.Standard.E5.Flex"
+    export TF_VAR_no_policy="true"
   fi 
 }
 
