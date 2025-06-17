@@ -12,11 +12,11 @@ variable prefix { default = "starter" }
 variable language { default = "java" }
 variable java_version { default = "21" }
 
-variable db_user { default="" }
-variable db_password{ default="" }
+variable db_user { default="ADMIN" }
+variable db_password{}
 
 # Compute Instance size
-variable instance_shape { default = "VM.Standard.x86.Generic" }
+variable instance_shape {}
 variable instance_ocpus { default = 1 }
 variable instance_shape_config_memory_in_gbs { default = 8 }
 
@@ -38,6 +38,9 @@ variable availability_domain_number { default = 1 }
 variable license_model {
   default="BRING_YOUR_OWN_LICENSE"
 }
+
+#Gen AI Agents
+variable "namespace" {default = "axw574j056qv"}
 
 # Group
 variable group_name { default="" }
