@@ -36,7 +36,7 @@ sudo dnf module install -y nodejs
 
 cd react
 npm install
-npm build
+npm run build
 
 I think it's ready, just unzip, run npm install , npm build and npm run start
 In file .env.local you can change the url of the genai api, now it's set to localhost NEXT_PUBLIC_GENAI_API_URL=http://localhost:8000
