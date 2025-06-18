@@ -1,8 +1,8 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Optional
 from fastapi.responses import FileResponse
-import json, os, glob, re
+import json, os, glob, base64
 import oci
 from oci import generative_ai_agent_runtime as genai_runtime
 from langchain.prompts import ChatPromptTemplate
@@ -64,6 +64,11 @@ def ensure_session(session_id=None):
     session = client.create_session(session_details, agent_id)
     return session.data.id
 
+# --- Base64 Helper ---
+def encode_image_to_base64(path):
+    with open(path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
+
 # --- Diagram Generation ---
 def generate_architecture_diagram(**kwargs):
     steps = kwargs.get("steps") or kwargs.get("message")
@@ -98,18 +103,12 @@ def generate_architecture_diagram(**kwargs):
     response = chain.invoke({"steps": steps})
     code = response["text"]
 
-    # 🧼 Clean code (remove markdown/code blocks and non-Python lines)
     code_lines = []
     for line in code.splitlines():
-        if line.strip().startswith("```"):
+        if line.strip().startswith("```") or "does not exist" in line.lower():
             continue
-        if "diagrams module does not" in line:
-            break
         code_lines.append(line)
     code = "\n".join(code_lines)
-
-    print("\n--- CLEANED PYTHON CODE ---\n")
-    print(code)
 
     for f in glob.glob("*.png"):
         os.remove(f)
@@ -117,10 +116,14 @@ def generate_architecture_diagram(**kwargs):
     with open("codesample.py", "w") as f:
         f.write(code)
 
-    os.system("python codesample.py")
-    files = glob.glob("*.png")
+    os.system("python3 codesample.py")
 
-    return {"diagram_path": files[0]} if files else {"diagram_path": None}
+    files = glob.glob("*.png")
+    if files:
+        diagram_path = files[0]
+        encoded = encode_image_to_base64(diagram_path)
+        return {"diagram_base64": encoded}
+    return {"diagram_base64": None}
 
 # --- Handle Required Actions from Agent ---
 def handle_required_actions(response_data, execute=True):
@@ -148,6 +151,7 @@ def handle_required_actions(response_data, execute=True):
 @app.post("/chat")
 async def chat(request: ChatRequest):
     sid = ensure_session(request.session_id)
+
     chat_details = genai_runtime.models.ChatDetails(
         user_message=request.question,
         should_stream=False,
@@ -155,8 +159,9 @@ async def chat(request: ChatRequest):
     )
     response = client.chat(agent_id, chat_details)
 
-    # Handle tool calls
     actions = handle_required_actions(response.data, execute=request.execute_functions)
+    diagram_base64 = None
+
     if actions:
         chat_details = genai_runtime.models.ChatDetails(
             user_message="",
@@ -165,34 +170,38 @@ async def chat(request: ChatRequest):
             performed_actions=actions
         )
         response = client.chat(agent_id, chat_details)
+        for action in actions:
+            try:
+                output = json.loads(action["functionCallOutput"])
+                if "diagram_base64" in output:
+                    diagram_base64 = output["diagram_base64"]
+            except:
+                pass
 
-    msg = response.data.message.content.text
-    diagram_path = None
+    msg_obj = response.data.message
+    msg = msg_obj.content.text
+    citations = msg_obj.content.citations if hasattr(msg_obj.content, "citations") else None
 
-    # Try to extract image path from returned JSON or fallback
+    answer = msg
+    sql_result = None
+    rag_context = None
+
     try:
         parsed = json.loads(msg)
-        if isinstance(parsed, dict) and "diagram_path" in parsed:
-            diagram_path = parsed["diagram_path"]
+        if isinstance(parsed, dict):
+            answer = parsed.get("text", msg)
+            sql_result = parsed.get("executionResult") or parsed.get("sql_result")
+            rag_context = parsed.get("rag_context")
+            if not diagram_base64:
+                diagram_base64 = parsed.get("diagram_base64")
     except:
-        match = re.search(r'([\w\/.-]+\.png)', msg)
-        if match and os.path.exists(match.group(1)):
-            diagram_path = match.group(1)
-        else:
-            files = glob.glob("*.png")
-            if files:
-                diagram_path = files[0]
+        pass
 
     return {
-        "answer": msg,
+        "answer": answer,
         "session_id": sid,
-        "diagram_path": diagram_path
+        "diagram_base64": diagram_base64,
+        "sql_result": sql_result,
+        "rag_context": rag_context,
+        "citations": citations
     }
-
-# --- Serve PNG Image ---
-@app.get("/image")
-def get_image(path: str = Query(...)):
-    return FileResponse(path)
-
-# Run with: uvicorn test:app --reload
-# curl -X POST http://locahost:8000/chat   -H "Content-Type: application/json"   -d '{"question": "What is the importance of Virus and Intrusion Detection"}'

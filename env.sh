@@ -12,6 +12,8 @@ export TF_VAR_db_user="admin"
 export TF_VAR_compartment_ocid="__TO_FILL__"
 # TF_VAR_db_password : Min length 12 characters, 2 lowercase, 2 uppercase, 2 numbers, 2 special characters. Ex: LiveLab__12345
 export TF_VAR_db_password="__TO_FILL__"
+export TF_VAR_vault_ocid="__TO_FILL__"
+export TF_VAR_vault_key_ocid="__TO_FILL__"
 
 if [ -f $HOME/.oci_starter_profile ]; then
   . $HOME/.oci_starter_profile

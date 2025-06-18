@@ -7,7 +7,7 @@ from io import BytesIO
 
 st.set_page_config(page_title="OCI Generative Agent Chat")
 st.title("OCI Generative Agent Chat")
-st.caption("Ask anything like: 'Show ticket 1052'")
+st.caption("Ask anything like: 'Show ticket 36'")
 
 if "session_id" not in st.session_state:
     resp = requests.get("http://localhost:8000/session")
