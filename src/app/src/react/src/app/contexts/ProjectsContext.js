@@ -111,9 +111,23 @@ export const ProjectProvider = ({ children }) => {
   };
 
   const getCurrentProject = () => {
+    const project =
+      projects.find((p) => p.id === currentProjectId) || projects[0];
+
+    if (project?.id === "default") {
+      return {
+        ...project,
+        name: APP_CONFIG.defaults.name,
+        logoUrl: APP_CONFIG.defaults.logoUrl,
+        mainColor: APP_CONFIG.defaults.color,
+        backgroundColor: APP_CONFIG.defaults.backgroundColor,
+        backgroundImage: APP_CONFIG.defaults.image,
+        speechProvider: APP_CONFIG.defaults.speechProvider,
+      };
+    }
+
     return (
-      projects.find((p) => p.id === currentProjectId) ||
-      projects[0] || {
+      project || {
         id: "default",
         name: APP_CONFIG.defaults.name,
         logoUrl: APP_CONFIG.defaults.logoUrl,

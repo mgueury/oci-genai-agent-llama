@@ -23,7 +23,7 @@ export const APP_CONFIG = {
   ],
   defaults: {
     color: "#3a3632",
-    image: "/background.png",
+    image: "/backgrounds/imac-blue.jpg",
     backgroundColor: "#F5F5F5",
     name: "OCI Generative AI Agents",
     logoUrl: "",

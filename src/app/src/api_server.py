@@ -147,6 +147,35 @@ def handle_required_actions(response_data, execute=True):
             })
     return results
 
+# --- Process_citations ---
+def process_citations(raw_citations):
+    """Process raw citations into frontend-friendly format"""
+    if not raw_citations:
+        return []
+    
+    processed = []
+    for citation in raw_citations:
+        try:
+            processed_citation = {
+                "citation_id": getattr(citation, 'doc_id', ''),
+                "content": getattr(citation, 'source_text', ''),
+                "document_name": getattr(citation, 'title', 'Unknown Source'),
+                "page_numbers": getattr(citation, 'page_numbers', []),
+                "source_url": None,
+                "storage_provider": None
+            }
+            
+            if hasattr(citation, 'source_location') and citation.source_location:
+                processed_citation["source_url"] = getattr(citation.source_location, 'url', None)
+                processed_citation["storage_provider"] = getattr(citation.source_location, 'source_location_type', None)
+            
+            processed.append(processed_citation)
+        except Exception as e:
+            logger.error(f"Error processing citation: {e}")
+            continue
+    
+    return processed
+
 # --- Main Chat Endpoint ---
 @app.post("/chat")
 async def chat(request: ChatRequest):
@@ -180,7 +209,10 @@ async def chat(request: ChatRequest):
 
     msg_obj = response.data.message
     msg = msg_obj.content.text
-    citations = msg_obj.content.citations if hasattr(msg_obj.content, "citations") else None
+    citations = process_citations(
+        msg_obj.content.citations if hasattr(msg_obj.content, "citations") else None
+    )
+
 
     answer = msg
     sql_result = None
