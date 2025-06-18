@@ -5,6 +5,8 @@ resource "oci_objectstorage_bucket" "starter_agent_bucket" {
   namespace      = var.namespace
   name           = "${var.prefix}-agent-bucket"
   object_events_enabled = true
+  # Public Bucket for React
+  access_type    = "ObjectReadWithoutList"
 
   freeform_tags = local.freeform_tags
 }
