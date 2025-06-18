@@ -46,6 +46,6 @@ sudo firewall-cmd --zone=public --add-port=3000/tcp --permanent
 sudo firewall-cmd --reload
 
 # Nginx - comment the "location /"
-
 sudo dnf install nginx -y > /tmp/dnf_nginx.log
+sudo ls /etc/nginx
 sudo sed -i '/^ *location \/ {/,/^ *}/s/^/# /' /etc/nginx/nginx.conf
