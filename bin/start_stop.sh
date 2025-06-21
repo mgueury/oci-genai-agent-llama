@@ -40,7 +40,11 @@ function loop_resource() {
             elif [ "$RESOURCE_TYPE" == "oci_integration_integration_instance" ]; then
                 oci integration integration-instance $ACTION --id $OCID
             elif [ "$RESOURCE_TYPE" == "oci_mysql_mysql_db_system" ]; then
-                oci mysql db-system $ACTION --db-system-id $OCID --shutdown-type innodb_fast_shutdown 
+                if [ "$ACTION" == "start" ]; then
+                    oci mysql db-system $ACTION --db-system-id $OCID 
+                else
+                    oci mysql db-system $ACTION --db-system-id $OCID --shutdown-type innodb_fast_shutdown 
+                fi
             elif [ "$RESOURCE_TYPE" == "oci_oda_oda_instance" ]; then
                 oci oda instance $ACTION --oda-instance-id $OCID
             fi
