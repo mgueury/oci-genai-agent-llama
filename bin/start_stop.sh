@@ -26,10 +26,11 @@ function loop_resource() {
                 oci db autonomous-database $ACTION --autonomous-database-id $OCID
             elif [ "$RESOURCE_TYPE" == "oci_database_db_system" ]; then
                 COMPARTMENT_ID=`oci db system get --db-system-id $OCID | jq -r '.data["compartment-id"]'`
-                NODES=$(oci db node --all --compartment-id $COMPARTMENT_ID --db-system-id $OCID | jq -r '.data[].id')
+                NODES=$(oci db node list --all --compartment-id $COMPARTMENT_ID --db-system-id $OCID | jq -r '.data[].id')
+                echo NODES=$NODES
                 for NODE in $NODES
                 do            
-                    oci db node stop --db-node-id $NODE
+                    oci db node $ACTION --db-node-id $NODE
                 done            
             elif [ "$RESOURCE_TYPE" == "oci_datascience_notebook_session" ]; then
                 if [ "$ACTION" == "start" ]; then
