@@ -224,8 +224,10 @@ if declare -p | grep -q "__TO_FILL__"; then
       read_ocid TF_VAR_vault_key_ocid "Vault" ocid1.key
     else
       # Comment the 2 lines. The vault will be created.
-      sed -i "s/^export TF_VAR_vault_ocid/#export TF_VAR_vault_ocid/" $PROJECT_DIR/env.sh     
-      sed -i "s/^export TF_VAR_vault_key_ocid/#export TF_VAR_vault_key_ocid/" $PROJECT_DIR/env.sh     
+      sed -i "s/^export TF_VAR_vault_ocid/# export TF_VAR_vault_ocid/" $PROJECT_DIR/env.sh     
+      sed -i "s/^export TF_VAR_vault_key_ocid/# export TF_VAR_vault_key_ocid/" $PROJECT_DIR/env.sh     
+      unset TF_VAR_vault_ocid
+      unset TF_VAR_vault_key_ocid
     fi     
   fi    
 
