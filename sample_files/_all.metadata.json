@@ -1,0 +1,37 @@
+{
+    "Backing Up Data to the Cloud- A Guide for Customer Support Agents.pdf Checking for Viruses and Network Intrusions- A Guide for Customer Support Agents.pdf" : {
+        "metadataAttributes": {
+            "category": "backup"
+        }
+    },
+    "Developing a Network Disaster Recovery Plan- A Guide for Customer Support Agents.pdf" : {
+        "metadataAttributes": {
+            "category": "backup"
+        }
+    },
+    "Performing an Upload and Download Internet Speed Test- A Guide for Customer Support Agents.pdf" : {
+        "metadataAttributes": {
+            "category": "network"
+        }
+    },
+    "Securing Business Networks- A Guide for Customer Support Agents.pdf" : {
+        "metadataAttributes": {
+            "category": "network"
+        }
+    },
+    "Setting Up, Monitoring, and Troubleshooting Home WiFi- A Guide for Customer Support Agents.pdf" : {
+        "metadataAttributes": {
+            "category": "network"
+        }
+    },
+    "Debugging and Resolving Connectivity Issues for ISP Customers.pdf" : {
+        "metadataAttributes": {
+            "category": "network"
+        }
+    },
+    "Debugging and Resolving Network Latency Issues for ISP Customers.pdf" : {
+        "metadataAttributes": {
+            "category": "network"
+        }
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "metadataSchema": [
+        {
+            "name": "category",
+            "type": "string"
+        }
+    ]
+}
