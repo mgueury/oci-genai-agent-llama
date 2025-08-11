@@ -1,0 +1,22 @@
+{
+    "oracle-rest-data-services-developers-guide.pdf" : {
+        "metadataAttributes": {
+            "category": "documentation"
+        }
+    },
+    "oracle-rest-data-services-installation-and-configuration-guide.pdf" : {
+        "metadataAttributes": {
+            "category": "documentation"
+        }
+    },
+    "oracle-rest-data-services-quick-start-guide.pdf" : {
+        "metadataAttributes": {
+            "category": "documentation"
+        }
+    },
+    "ords-faq.pdf" : {
+        "metadataAttributes": {
+            "category": "faq"
+        }
+    }
+}
