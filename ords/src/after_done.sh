@@ -81,7 +81,7 @@ oci generative-ai-agent tool create-tool-sql-tool-config \
   --tool-config-model-size LARGE \
   --wait-for-state SUCCEEDED --wait-for-state FAILED
 
-## Create SR TOOL
+## REST API Tool - Create SR TOOL
 oci generative-ai-agent tool create-tool-http-endpoint-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
@@ -89,14 +89,21 @@ oci generative-ai-agent tool create-tool-http-endpoint-tool-config \
   --description "Create Service Request" \
   --tool-config-subnet-id  $APP_SUBNET_OCID \
   --tool-config-http-endpoint-auth-config "{
-    \"httpEndpointAuthConfigType\": \"HTTP_ENDPOINT_NO_AUTH_CONFIG\"
-  }" 
+    \"httpEndpointAuthConfigType\": \"HTTP_ENDPOINT_NO_AUTH_CONFIG\",
+    \"httpEndpointAuthSources\": [
+        {
+            \"httpEndpointAuthScope\": \"AGENT\",
+            \"httpEndpointAuthScopeConfig\": {
+                \"httpEndpointAuthScopeConfigType\": \"HTTP_ENDPOINT_NO_AUTH_SCOPE_CONFIG\"
+            }
+        }
+    ]  
+    }" \
   --tool-config-api-schema "{
     \"apiSchemaInputLocationType\": \"INLINE\",
-    \"content\": \"openapi: 3.0.0\\ninfo:\\n title: create_sr\\n version: 1.0.0\\n description: Create a Service Request\n\nservers:\\n - url: https://hrqqz3rzz6zcmelg6gx23jq6wq.apigateway.eu-frankfurt-1.oci.customer-oci.com\n\npaths:\\n '/ords/apex_app/insert/insert':\\n   get:\\n     summary: Create a Service Request\\n     description: Create a Service Request\\n     parameters:\\n       - name: title\\n         in: query\\n         required: true\\n         description: title of the SR\\n         schema:\\n           type: string\\n           example: \"value\"\\n     responses:\\n       '200':\\n         description: OK - The request was successful and the resource was returned.\\n       '400':\\n         description: Bad Request - The request was invalid, likely due to a missing 'param' parameter.\\n\",
+    \"content\": \"openapi: 3.0.0\\ninfo:\\n title: create_sr\\n version: 1.0.0\\n description: Create a Service Request\n\nservers:\\n - url: https://${APIGW_HOSTNAME}\n\npaths:\\n '/ords/apex_app/insert/insert':\\n   get:\\n     summary: Create a Service Request\\n     description: Create a Service Request\\n     parameters:\\n       - name: title\\n         in: query\\n         required: true\\n         description: title of the SR\\n         schema:\\n           type: string\\n           example: value\\n     responses:\\n       '200':\\n         description: OK - The request was successful and the resource was returned.\\n       '400':\\n         description: Bad Request - The request was invalid, likely due to a missing 'param' parameter.\\n\"
   }" \
   --wait-for-state SUCCEEDED --wait-for-state FAILED
-
 
 title "INSTALLATION DONE"
 echo

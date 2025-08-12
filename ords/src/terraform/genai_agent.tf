@@ -59,7 +59,7 @@ resource "oci_generative_ai_agent_agent" "starter_agent" {
   compartment_id                 = local.lz_serv_cmp_ocid
   display_name                   = "${var.prefix}-agent"
   description                    = "${var.prefix}-agent"
-  welcome_message                = "How can I help you ?"
+  welcome_message                = "Hello, I am your Support Agent."
   llm_config {
 	routing_llm_customization {
 		#Optional
