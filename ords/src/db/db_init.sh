@@ -113,11 +113,34 @@ BEGIN
     p_pattern        => 'insert',
     p_method         => 'GET',
     p_source_type    => ords.source_type_plsql,
-    p_source         => 'BEGIN
-    :pn_status := 200;
-    HTP.print(''ORDS'');
-END;
-');
+    p_source         => 'DECLARE 
+  TID number;
+BEGIN
+  :pn_status := 200;
+  if :title is not null then
+      HTP.print(''created SR '' || :title);  
+      select max(t.ticketid)+1 into tid from ADMIN.TICKETS t;
+      INSERT INTO ADMIN.TICKETS (
+        TICKETID,
+        CUSTOMERNAME,
+        SUBJECT,
+        DESCRIPTION,
+        CREATEDDATE,
+        LASTUPDATEDDATE,
+        STATUSID,
+        ASSIGNEDTOAGENTID
+      ) VALUES ( TID,
+        ''CustomerODRS'',
+        :title,
+        nvl(:question, ''-''),
+        SYSDATE,
+        SYSDATE,
+        1,
+        2 );    
+   else
+     HTP.print(''<br>no title'');
+   end if;
+END;');
   commit;                      
 end;                        
 /
