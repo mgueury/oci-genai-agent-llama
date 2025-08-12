@@ -87,7 +87,7 @@ oci generative-ai-agent tool create-tool-http-endpoint-tool-config \
   --compartment-id $TF_VAR_compartment_ocid \
   --display-name create-sr \
   --description "Create Service Request" \
-  --tool-config-subnet-id  $APP_SUBNET_OCID \
+  --tool-config-subnet-id $APP_SUBNET_OCID \
   --tool-config-http-endpoint-auth-config "{
     \"httpEndpointAuthConfigType\": \"HTTP_ENDPOINT_NO_AUTH_CONFIG\",
     \"httpEndpointAuthSources\": [
@@ -101,10 +101,10 @@ oci generative-ai-agent tool create-tool-http-endpoint-tool-config \
     }" \
   --tool-config-api-schema "{
     \"apiSchemaInputLocationType\": \"INLINE\",
-    \"content\": \"openapi: 3.0.0\\ninfo:\\n title: create_sr\\n version: 1.0.0\\n description: Create a Service Request\n\nservers:\\n - url: https://${APIGW_HOSTNAME}\n\npaths:\\n '/ords/apex_app/insert/insert':\\n   get:\\n     summary: Create a Service Request\\n     description: Create a Service Request\\n     parameters:\\n       - name: title\\n         in: query\\n         required: true\\n         description: title of the SR\\n         schema:\\n           type: string\\n           example: value\\n     responses:\\n       '200':\\n         description: OK - The request was successful and the resource was returned.\\n       '400':\\n         description: Bad Request - The request was invalid, likely due to a missing 'param' parameter.\\n\"
+    \"content\": \"openapi: 3.0.0\\ninfo:\\n title: create_sr\\n version: 1.0.0\\n description: Create a Service Request\n\nservers:\\n - url: https://${APIGW_HOSTNAME}\n\npaths:\\n '/ords/apex_app/module/insert':\\n   get:\\n     summary: Create a Service Request\\n     description: Create a Service Request\\n     parameters:\\n       - name: title\\n         in: query\\n         required: true\\n         description: title of the SR\\n         schema:\\n           type: string\\n           example: value\\n     responses:\\n       '200':\\n         description: OK - The request was successful and the resource was returned.\\n       '400':\\n         description: Bad Request - The request was invalid, likely due to a missing 'param' parameter.\\n\"
   }" \
   --wait-for-state SUCCEEDED --wait-for-state FAILED
-
+/ords/apex_app/module/insert
 title "INSTALLATION DONE"
 echo
 echo "Some background jobs are still running (ex: RAG Ingestion). Please wait 5 mins."
