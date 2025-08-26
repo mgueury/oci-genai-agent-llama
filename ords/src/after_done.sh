@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 export SRC_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 export ROOT_DIR=${SRC_DIR%/*}
 cd $ROOT_DIR
