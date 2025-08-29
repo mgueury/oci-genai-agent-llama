@@ -6,7 +6,14 @@ variable ssh_public_key {}
 variable ssh_private_key {}
 
 # Prefix
-variable prefix { default = "starter" }
+variable prefix {
+  default = "starter"
+
+  validation {
+    condition     = can(regex("^[a-zA-Z][a-zA-Z0-9]*$", var.prefix))
+    error_message = "The variable value must start with a letter and contain only alphanumeric characters."
+  }
+}
 
 # Java
 variable language { default = "java" }
