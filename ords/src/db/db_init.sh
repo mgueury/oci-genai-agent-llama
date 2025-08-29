@@ -17,6 +17,7 @@ DB  = $DB_URL
 EOT
 
 export TNS_ADMIN=$SCRIPT_DIR
+export NLS_LANG=AMERICAN_AMERICA.UTF8
 
 # Install SQLCL (Java program)
 wget https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
@@ -78,7 +79,7 @@ end;
 grant all on tickets to APEX_APP;
 
 BEGIN
-  update tickets set description=replace(description, '\n', chr(13) )
+  update tickets set description=replace(description, '\n', chr(13) );
   COMMIT;
 END;
 /

@@ -180,17 +180,16 @@ def process_citations(raw_citations):
 @app.post("/chat")
 async def chat(request: ChatRequest):
     sid = ensure_session(request.session_id)
-
+    # First chat request
     chat_details = genai_runtime.models.ChatDetails(
         user_message=request.question,
         should_stream=False,
         session_id=sid
     )
     response = client.chat(agent_id, chat_details)
-
+    # Handle required actions
     actions = handle_required_actions(response.data, execute=request.execute_functions)
     diagram_base64 = None
-
     if actions:
         chat_details = genai_runtime.models.ChatDetails(
             user_message="",
@@ -206,18 +205,59 @@ async def chat(request: ChatRequest):
                     diagram_base64 = output["diagram_base64"]
             except:
                 pass
-
+    # --- Extract message text safely ---
     msg_obj = response.data.message
-    msg = msg_obj.content.text
-    citations = process_citations(
-        msg_obj.content.citations if hasattr(msg_obj.content, "citations") else None
-    )
-
-
+    msg = getattr(getattr(msg_obj, "content", None), "text", None) or getattr(msg_obj, "text", "")
+    # --- Extract citations from all possible locations ---
+    def get_raw_citations(msg_obj):
+        for path in [
+            ("content", "citations"),
+            ("citations",),
+            ("content", "references"),
+            ("references",),
+        ]:
+            obj = msg_obj
+            for attr in path:
+                obj = getattr(obj, attr, None)
+                if obj is None:
+                    break
+            if obj:
+                return obj
+        return None
+    raw_citations = get_raw_citations(msg_obj)
+    # --- citation processing ---
+    def process_citations(raw):
+        if not raw:
+            return []
+        out = []
+        for c in raw:
+            try:
+                title = getattr(c, "title", None) or getattr(c, "document_title", None) or getattr(c, "name", "Unknown Source")
+                text  = getattr(c, "source_text", None) or getattr(c, "snippet", None) or getattr(c, "content", "") or ""
+                docid = getattr(c, "doc_id", None) or getattr(c, "document_id", None) or ""
+                pages = getattr(c, "page_numbers", None) or getattr(c, "pages", None) or []
+                url   = None
+                prov  = None
+                sl = getattr(c, "source_location", None)
+                if sl:
+                    url  = getattr(sl, "url", None)
+                    prov = getattr(sl, "source_location_type", None)
+                out.append({
+                    "citation_id": docid,
+                    "content": text,
+                    "document_name": title,
+                    "page_numbers": pages,
+                    "source_url": url,
+                    "storage_provider": prov,
+                })
+            except Exception:
+                continue
+        return out
+    citations = process_citations(raw_citations)
+    # --- Handle JSON-parsed responses (e.g., SQL, RAG) ---
     answer = msg
     sql_result = None
     rag_context = None
-
     try:
         parsed = json.loads(msg)
         if isinstance(parsed, dict):
@@ -228,7 +268,7 @@ async def chat(request: ChatRequest):
                 diagram_base64 = parsed.get("diagram_base64")
     except:
         pass
-
+    # --- Return final response ---
     return {
         "answer": answer,
         "session_id": sid,

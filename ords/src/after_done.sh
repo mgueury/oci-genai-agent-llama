@@ -82,6 +82,7 @@ oci generative-ai-agent tool create-tool-sql-tool-config \
   --wait-for-state SUCCEEDED --wait-for-state FAILED
 
 ## REST API Tool - Create SR TOOL
+title "Creating REST API TOOL"
 oci generative-ai-agent tool create-tool-http-endpoint-tool-config \
   --agent-id $AGENT_OCID \
   --compartment-id $TF_VAR_compartment_ocid \
