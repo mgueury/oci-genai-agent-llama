@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [ "$PROJECT_DIR" = "" ]; then
   echo "Error: PROJECT_DIR not set. Please use starter.sh."
   exit 1
@@ -30,7 +30,7 @@ if declare -p | grep -q "__TO_FILL__"; then
 
   store_env_sh() {
     echo "$1=$2"            
-    sed -i "s&$1=\"__TO_FILL__\"&$1=\"$2\"&" $PROJECT_DIR/env.sh              
+    sed -i "" "s&$1=\"__TO_FILL__\"&$1=\"$2\"&" $PROJECT_DIR/env.sh
     echo "$1 stored in env.sh"            
     echo       
   }

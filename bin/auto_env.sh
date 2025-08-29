@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # PROJECT_DIR
 if [[ -z "${PROJECT_DIR}" ]]; then
@@ -92,7 +92,7 @@ else
 fi 
 
 # XXXXXX TO REMOVE WHEN PY_OCI_STARTER.PY is done
-if [ -v REPOSITORY_NAME ]; then
+if [[ -n "${REPOSITORY_NAME+defined}" ]]; then
   return
 fi 
 

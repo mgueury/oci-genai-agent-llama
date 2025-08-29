@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # compute_init.sh 
 #
 # Init of a compute
@@ -83,7 +83,7 @@ done
 
 # -- app/start.sh -----------------------------------------------------------
 for APP_DIR in `ls -d app* | sort -g`; do
-  echo "#!/bin/bash" > $APP_DIR/restart.sh 
+  echo "#!/usr/bin/env bash" > $APP_DIR/restart.sh 
   chmod +x $APP_DIR/restart.sh  
   for START_SH in `ls $APP_DIR/start*.sh | sort -g`; do
     echo "-- $START_SH ---------------------------------------"
