@@ -8,6 +8,7 @@ oci
 diagrams
 
 # Langchain
+langchain
 langgraph 
 langchain_community
 

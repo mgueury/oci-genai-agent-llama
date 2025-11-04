@@ -24,7 +24,7 @@ if is_deploy_compute; then
     # Find the latest Llama model
     oci generative-ai model-collection list-models --compartment-id $TF_VAR_compartment_ocid --all > $TARGET_DIR/genai_models.json 
     export TF_VAR_genai_meta_model=$(jq -r '.data.items[]|select(.vendor=="meta" and (.capabilities|index("CHAT")))|.["display-name"]' $TARGET_DIR/genai_models.json | head -n 1)
-    echo $TF_VAR_genai_meta_model
+    echo "TF_VAR_genai_meta_model=$TF_VAR_genai_meta_model"
 
     file_replace_variables $TARGET_DIR/compute/$APP_DIR/env.sh
   fi 

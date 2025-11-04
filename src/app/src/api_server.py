@@ -5,8 +5,8 @@ from fastapi.responses import FileResponse
 import json, os, glob, base64
 import oci
 from oci import generative_ai_agent_runtime as genai_runtime
-from langchain.prompts import ChatPromptTemplate
-from langchain.chains import LLMChain
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from langchain_community.chat_models import ChatOCIGenAI
 
 # --- Configuration ---
@@ -99,7 +99,8 @@ def generate_architecture_diagram(**kwargs):
     """)
 
     llm = get_llm(temperature=0.0)
-    chain = LLMChain(llm=llm, prompt=prompt)
+    chain = prompt | llm | StrOutputParser()    
+    # chain = LLMChain(llm=llm, prompt=prompt)
     response = chain.invoke({"steps": steps})
     code = response["text"]
 
