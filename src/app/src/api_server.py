@@ -102,7 +102,7 @@ def generate_architecture_diagram(**kwargs):
     chain = prompt | llm | StrOutputParser()    
     # chain = LLMChain(llm=llm, prompt=prompt)
     response = chain.invoke({"steps": steps})
-    code = response["text"]
+    code = response
 
     code_lines = []
     for line in code.splitlines():
